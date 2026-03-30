@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rolldown -c",
+    "check": "pnpm build && dnscontrol check --config dist/dnsconfig.js",
+    "preview": "pnpm build && dnscontrol preview --config dist/dnsconfig.js",
+    "push": "pnpm build && dnscontrol push --config dist/dnsconfig.js",
+    "fmt": "oxfmt --write src/",
+    "fmt:check": "oxfmt --check src/",
+    "lint": "oxlint src/",
+    "typecheck": "tsc --noEmit",
+    "write-types": "dnscontrol write-types && mv types-dnscontrol.d.ts src/types.d.ts",
+    "validate": "pnpm --parallel '/^(lint|fmt:check|typecheck)$/' && pnpm check",
+    "postinstall": "pnpm write-types"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-typescript": "^7.28.5",
+    "@rollup/plugin-babel": "^7.0.0",
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
+    "rolldown": "1.0.0-rc.12",
+    "typescript": "^6.0.2"
+  }
+}
