@@ -20,8 +20,8 @@ export interface ProtonMailConfig {
   subdomain: string;
   verification: string;
   dkim: Array<{
-    selector: string;
-    publicKey: string;
+    hostname: string;
+    value: string;
   }>;
   dmarc?: {
     name?: string;
@@ -31,7 +31,7 @@ export interface ProtonMailConfig {
 }
 
 export function protonMailDkim(records: ProtonMailConfig["dkim"]) {
-  return records.map(({ selector, publicKey }) => TXT(`${selector}._domainkey`, `v=DKIM1; k=rsa; p=${publicKey}`));
+  return records.map(({ hostname, value }) => CNAME(hostname, value));
 }
 
 export function protonMailDmarc(name: string, policy = "p=quarantine") {
