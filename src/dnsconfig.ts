@@ -7,7 +7,7 @@ D("t128n.dev", REG_PORKBUN, DnsProvider(DSP_CF), DefaultTTL(300),
 
   ...protonMail({
     subdomain: "@",
-    verification: "protonmail-verification=82b6e14e24e883e32af968aedff32813d40cf559",
+    verification: "82b6e14e24e883e32af968aedff32813d40cf559",
     dkim: [{ selector: "protonmail", publicKey: "publickey" }],
     dmarc: { name: "_dmarc", policy: "p=quarantine" },
   }),
