@@ -1,0 +1,66 @@
+name: Weekly DNS Drift Check
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Every Sunday at midnight
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  issues: write
+
+jobs:
+  drift-check:
+    name: Check for Drift
+    runs-on: ubuntu-latest
+    env:
+      PORKBUN_API_KEY: ${{ secrets.PORKBUN_API_KEY }}
+      PORKBUN_SECRET_KEY: ${{ secrets.PORKBUN_SECRET_KEY }}
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install mise
+        uses: jdx/mise-action@v2
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Check for Drift
+        id: check
+        run: |
+          # Run preview and capture output
+          # We use 2>&1 to capture both stdout and stderr
+          OUTPUT=$(bun run preview 2>&1)
+          echo "$OUTPUT"
+          
+          if echo "$OUTPUT" | grep -q "0 corrections"; then
+            echo "drift=false" >> $GITHUB_OUTPUT
+          else
+            echo "drift=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create or Update Issue
+        if: steps.check.outputs.drift == 'true'
+        run: |
+          TITLE="DNS Drift Detected"
+          BODY="The weekly drift check detected differences between the configuration and real-world DNS records. Please review the [latest workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
+          ASSIGNEE="t128n"
+          
+          # Check if an open issue already exists to avoid duplicates
+          EXISTING_ISSUE=$(gh issue list --search "$TITLE" --state open --json number --jq '.[0].number')
+          
+          if [ -z "$EXISTING_ISSUE" ]; then
+            echo "Creating new issue..."
+            gh issue create \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --assignee "$ASSIGNEE"
+          else
+            echo "An open issue already exists: #$EXISTING_ISSUE. Updating with a comment..."
+            gh issue comment "$EXISTING_ISSUE" --body "Drift was detected again in the [latest run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
+          fi
