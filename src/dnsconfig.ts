@@ -3,6 +3,7 @@ import { protonMail } from "~/lib/common";
 
 // oxfmt-ignore
 D("t128n.dev", REG_PORKBUN, DnsProvider(DSP_CF), DefaultTTL(300),
+  ALIAS("@", "t128n-dev.pages.dev.", CF_PROXY_ON),
   CNAME("www", "@"),
 
   ...protonMail({
