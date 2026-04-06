@@ -3,16 +3,16 @@
   "type": "module",
   "scripts": {
     "build": "rolldown -c",
-    "check": "pnpm build && dnscontrol check --config dist/dnsconfig.js",
-    "preview": "pnpm build && dnscontrol preview --config dist/dnsconfig.js",
-    "push": "pnpm build && dnscontrol push --config dist/dnsconfig.js",
+    "check": "bun run build && dnscontrol check --config dist/dnsconfig.js",
+    "preview": "bun run build && dnscontrol preview --config dist/dnsconfig.js",
+    "push": "bun run build && dnscontrol push --config dist/dnsconfig.js",
     "fmt": "oxfmt --write src/",
     "fmt:check": "oxfmt --check src/",
     "lint": "oxlint src/",
     "typecheck": "tsc --noEmit",
     "write-types": "dnscontrol write-types && mv types-dnscontrol.d.ts src/types.d.ts",
-    "validate": "pnpm --parallel '/^(lint|fmt:check|typecheck)$/' && pnpm check",
-    "postinstall": "pnpm write-types"
+    "validate": "bun run lint && bun run fmt:check && bun run typecheck && bun run check",
+    "postinstall": "bun run write-types"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",

@@ -1,5 +1,6 @@
 [tools]
 node = "lts"
+bun = "latest"
 pnpm = "10"
 go = "1.24"
 "go:github.com/StackExchange/dnscontrol/v4" = "v4"

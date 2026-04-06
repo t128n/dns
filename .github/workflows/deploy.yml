@@ -1,0 +1,30 @@
+name: Deploy DNS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and Push
+    runs-on: ubuntu-latest
+    env:
+      PORKBUN_API_KEY: ${{ secrets.PORKBUN_API_KEY }}
+      PORKBUN_SECRET_KEY: ${{ secrets.PORKBUN_SECRET_KEY }}
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install mise
+        uses: jdx/mise-action@v2
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build and Push
+        run: bun run push

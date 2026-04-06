@@ -4,16 +4,16 @@ DNS configuration managed with DNSControl.
 
 ## Usage
 
-`pnpm validate`: Full configuration validation.
-`pnpm check`: DNSControl-focused validation.
-`pnpm preview`: Preview changes without applying them.
-`pnpm push`: Apply changes to DNS providers.
+`bun run validate`: Full configuration validation.
+`bun run check`: DNSControl-focused validation.
+`bun run preview`: Preview changes without applying them.
+`bun run push`: Apply changes to DNS providers.
 
 ## Getting Started
 
 1. Clone repository
 2. Run `mise install` to install dev-dependencies.
-3. Run `pnpm install` to install dependencies.
+3. Run `bun install` to install dependencies.
 4. Setup credentials by copying `.env.example` to `.env.local` and filling in the required values.
 
 ## License
